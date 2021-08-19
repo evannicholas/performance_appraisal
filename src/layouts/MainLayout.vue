@@ -15,7 +15,8 @@
           Quasar App
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div><AuthButton/></div>
+        <!-- <div><q-btn color="primary" :label="username" @click="onClick" /></div> -->
       </q-toolbar>
     </q-header>
 
@@ -96,12 +97,14 @@ const linksList = [
 ];
 
 import { defineComponent, ref } from 'vue'
+import AuthButton from "components/AuthButton.vue";
 
 export default defineComponent({
   name: 'MainLayout',
 
   components: {
-    EssentialLink
+    EssentialLink,
+    AuthButton
   },
 
   setup () {
@@ -112,7 +115,7 @@ export default defineComponent({
       leftDrawerOpen,
       toggleLeftDrawer () {
         leftDrawerOpen.value = !leftDrawerOpen.value
-      }
+      },
     }
   }
 })
