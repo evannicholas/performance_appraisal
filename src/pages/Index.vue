@@ -10,8 +10,13 @@
 
 <script>
 import { defineComponent } from 'vue';
-
+import { useQuasar } from 'quasar'
 export default defineComponent({
-  name: 'PageIndex'
+  name: 'PageIndex',
+  setup(){
+    const $q = useQuasar();
+     $q.dark.set('auto');
+  }
 })
 </script>
+   

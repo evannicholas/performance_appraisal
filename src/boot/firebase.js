@@ -17,10 +17,14 @@ export default async ({ store }) => {
     firebase.initializeApp(firebaseConfig);
 
     firebase.auth().onAuthStateChanged(function (user) {
-        console.log(user.displayName);
-        store.commit("main/setCurrentUser", {
-            email: user.email,
-            name: user.displayName,
-        });
+        if (user != null) {
+            // console.log(user.displayName);
+            store.commit("main/setCurrentUser", {
+                email: user.email,
+                name: user.displayName,
+            });
+        } else {
+            store.commit("main/setCurrentUser", null);
+        }
     });
 }

@@ -24,12 +24,12 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      class="bg-grey-1"
+      class="bg-dark"
     >
       <q-list>
         <q-item-label
           header
-          class="text-grey-8"
+          class="text-grey-1"
         >
           Essential Links
         </q-item-label>
