@@ -13,7 +13,6 @@ const routes = [
       { path: 'departments/', component: () => import('pages/Departments/Index.vue') },
       { path: 'departments/add', component: () => import('pages/Departments/Add.vue') },
       { path: 'departments/edit/:id', component: () => import('pages/Departments/Edit.vue') },
-      { path: 'departments/delete/:id', component: () => import('pages/Departments/Delete.vue') },
     ]
   },
 

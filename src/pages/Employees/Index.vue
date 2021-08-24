@@ -13,17 +13,17 @@
         <div class="col-2"></div>
       </div>
       <div class="row q-my-sm" v-for="employee in employees" :key="employee.id">
-        <div class="col-1">{{ employee.emp_id }}</div>
-        <div class="col-2">{{ employee.emp_name }}</div>
+        <div class="col-1">{{ employee.id }}</div>
+        <div class="col-2">{{ employee.name }}</div>
         <div class="col-2">{{ employee.phone_number }}</div>
         <div class="col-3">{{ employee.address }}</div>
-        <div class="col-2">{{ employee.dep_name }}</div>
+        <div class="col-2">{{ employee.department }}</div>
         <div class="col-1">
           <q-btn
             small
             color="primary"
             icon="edit"
-            :to="`/employees/edit/${employee.emp_id}`"
+            :to="`/employees/edit/${employee.id}`"
           />
         </div>
         <div class="col-1">
@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import firebase from "firebase/app";
+import "firebase/firestore";
 export default {
   data() {
     return {
@@ -67,13 +69,32 @@ export default {
   methods: {
     loadData() {
       this.employees = [];
+      firebase
+        .firestore()
+        .collection("employees")
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            console.log(doc.id, "=>", doc.data());
+            let data = doc.data();
+            data.id = doc.id;
+            this.employees.push(data);
+          });
+        });
     },
     deletePopupOn(employee){
       this.employeeToBeDeleted = employee;
       this.deletePopup = true;
     },
     deleteEmployee() {
-      
+      firebase
+        .firestore()
+        .collection("employees")
+        .doc(id)
+        .delete()
+        .then(() => {
+          this.loadData();
+        });
     },
   },
   mounted() {

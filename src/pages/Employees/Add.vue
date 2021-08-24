@@ -12,13 +12,13 @@
         />
         <q-input v-model="form.address" outlined type="text" label="Address" />
         <q-select
-          v-model="form.dep_id"
+          v-model="departmentSelect"
           outlined
           :options="departementOptions"
           label="Department"
         />
         <q-btn color="red" icon="block" label="Cancel" to="/employees" />
-        <q-btn color="primary" icon="done" label="Submit" @click="submit" />
+        <q-btn :loading="isSubmitting" color="primary" icon="done" label="Submit" @click="submit" />
       </div>
     </div>
   </div>
@@ -30,15 +30,14 @@ import "firebase/firestore";
 export default {
   methods: {
     submit() {
+      this.isSubmitting = true;
+      this.form.department = this.departmentSelect.value;
       firebase
         .firestore()
         .collection("employees")
-        .add({
-          name: this.form.name,
-          phone_number: this.form.phone_number,
-          address: this.form.address,
-        })
+        .add(this.form)
         .then(() => {
+          this.isSubmitting = false;
           console.log("Document successfully written!");
         })
         .catch((error) => {
@@ -70,9 +69,11 @@ export default {
         name: "",
         phone_number: "",
         address: "",
-        dep_id: " ",
+        department: "",
       },
+      departmentSelect: "",
       departementOptions: [],
+      isSubmitting: false,
     };
   },
 };
