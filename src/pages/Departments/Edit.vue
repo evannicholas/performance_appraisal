@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="row q-pa-md">
-      <div class="col q-gutter-md q-pa-md">
-        <h6 class="text-left">Edit {{form.name}}</h6>
+      <div class="col q-gutter-md q-pa-md text-right">
+        <h6 class="text-left">Edit Department</h6>
         <q-input
           v-model="$route.params.id"
           outlined
@@ -11,46 +11,66 @@
           readonly
         />
         <q-input v-model="form.name" outlined type="text" label="Name" />
-        <q-input
-          v-model="form.phone_number"
-          outlined
-          type="text"
-          label="Phone Number"
+        <q-btn color="dark" label="back" to="/departments" />
+        <q-btn
+          color="primary"
+          icon="done"
+          label="Submit"
+          @click="submit"
+          to="/departments"
         />
-        <q-input v-model="form.address" outlined type="text" label="Address" />
-        <q-select
-          v-model="form.dep_id"
-          outlined
-          :options="departementOptions"
-          label="Department"
-        />
-         <q-btn color="red" icon="block" label="Cancel" to ="/employees" />
-        <q-btn color="primary" icon="done" label="Submit" @click="submit" />
       </div>
     </div>
   </div>
 </template>
 
+
 <script>
+import firebase from "firebase/app";
+import "firebase/firestore";
+
 export default {
   methods: {
     submit() {
-     
+      firebase
+        .firestore()
+        .collection("departments")
+        .doc(this.$route.params.id)
+        .set({
+          name: this.form.name,
+        })
+        .then(() => {
+          console.log("Document successfully written!");
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+        });
     },
   },
   mounted() {
-    
+    firebase
+      .firestore()
+      .collection("departments")
+      .doc(this.$route.params.id)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+          this.form.name = doc.data().name;
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
   },
   data() {
     return {
       form: {
-        emp_id: this.$route.params.id,
         name: "",
-        phone_number: "",
-        address: "",
-        dep_id: "",
       },
-      departments: [],
     };
   },
   computed: {

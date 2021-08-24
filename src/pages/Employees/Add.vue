@@ -25,15 +25,44 @@
 </template>
 
 <script>
-
+import firebase from "firebase/app";
+import "firebase/firestore";
 export default {
   methods: {
     submit() {
-     
+      firebase
+        .firestore()
+        .collection("employees")
+        .add({
+          name: this.form.name,
+          phone_number: this.form.phone_number,
+          address: this.form.address,
+        })
+        .then(() => {
+          console.log("Document successfully written!");
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+        });
+    },
+    loadDepartments() {
+      this.departmentOptions = [];
+      firebase
+        .firestore()
+        .collection("departments")
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            this.departementOptions.push({
+              label: doc.data().name,
+              value: doc.id,
+            });
+          });
+        });
     },
   },
   mounted() {
-   
+    this.loadDepartments();
   },
   data() {
     return {
@@ -43,20 +72,8 @@ export default {
         address: "",
         dep_id: " ",
       },
-      departments: [],
+      departementOptions: [],
     };
-  },
-  computed: {
-    departementOptions() {
-      let options = [];
-      this.departments.forEach((dep) => {
-        options.push({
-          label: dep.dep_name,
-          value: dep.dep_id,
-        });
-      });
-      return options;
-    },
   },
 };
 </script>

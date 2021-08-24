@@ -41,7 +41,6 @@ export default {
       form: {
         name: "",
       },
-      departments: [],
     };
   },
   computed: {},
