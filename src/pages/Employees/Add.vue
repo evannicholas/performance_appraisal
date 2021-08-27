@@ -12,13 +12,21 @@
         />
         <q-input v-model="form.address" outlined type="text" label="Address" />
         <q-select
-          v-model="departmentSelect"
+          v-model="form.department"
           outlined
           :options="departementOptions"
           label="Department"
+          emit-value
+          map-options
         />
         <q-btn color="red" icon="block" label="Cancel" to="/employees" />
-        <q-btn :loading="isSubmitting" color="primary" icon="done" label="Submit" @click="submit" />
+        <q-btn
+          :loading="isSubmitting"
+          color="primary"
+          icon="done"
+          label="Submit"
+          @click="submit"
+        />
       </div>
     </div>
   </div>
@@ -26,19 +34,30 @@
 
 <script>
 import firebase from "firebase/app";
+import "firebase/auth";
 import "firebase/firestore";
 export default {
   methods: {
     submit() {
       this.isSubmitting = true;
-      this.form.department = this.departmentSelect.value;
+      // this.form.department = this.departmentSelect.value;
       firebase
         .firestore()
         .collection("employees")
         .add(this.form)
-        .then(() => {
+        .then((docref) => {
           this.isSubmitting = false;
           console.log("Document successfully written!");
+
+          firebase
+            .firestore()
+            .collection("log")
+            .add({
+              user: firebase.auth().currentUser.uid,
+              timestamp: new Date(),
+              action: `Created a new employee ${docref.id}`,
+              object: this.form,
+            });
         })
         .catch((error) => {
           console.error("Error writing document: ", error);

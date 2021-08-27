@@ -13,11 +13,11 @@
         <div class="col-2"></div>
       </div>
       <div class="row q-my-sm" v-for="employee in employees" :key="employee.id">
-        <div class="col-1">{{ employee.id }}</div>
+        <div class="col-1">{{ }}</div>
         <div class="col-2">{{ employee.name }}</div>
         <div class="col-2">{{ employee.phone_number }}</div>
         <div class="col-3">{{ employee.address }}</div>
-        <div class="col-2">{{ employee.department }}</div>
+        <div class="col-2">{{ departmentMap.get(employee.department) }}</div>
         <div class="col-1">
           <q-btn
             small
@@ -42,7 +42,7 @@
         <q-card-section class="row items-center">
           <q-avatar icon="delete" color="red" text-color="white" />
           <span class="q-ml-sm"
-            >Are you sure you want to delete?.</span
+            >Are you sure you want to delete?</span
           >
         </q-card-section>
 
@@ -64,6 +64,7 @@ export default {
       employees: [],
       deletePopup : false,
       employeeToBeDeleted: null,
+      departmentMap: new Map(),
     };
   },
   methods: {
@@ -80,6 +81,17 @@ export default {
             data.id = doc.id;
             this.employees.push(data);
           });
+        }); 
+    },
+    loadDepartments() {
+      firebase
+        .firestore()
+        .collection("departments")
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            this.departmentMap.set(doc.id, doc.data().name);
+          });
         });
     },
     deletePopupOn(employee){
@@ -90,15 +102,17 @@ export default {
       firebase
         .firestore()
         .collection("employees")
-        .doc(id)
+        .doc(this.employeeToBeDeleted.id)
         .delete()
         .then(() => {
           this.loadData();
         });
     },
+    
   },
   mounted() {
     this.loadData();
+    this.loadDepartments();
   },
 };
 </script>

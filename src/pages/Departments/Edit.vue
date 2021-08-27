@@ -32,6 +32,7 @@ import "firebase/firestore";
 export default {
   methods: {
     submit() {
+      const parameter = this.$route.params.id;
       firebase
         .firestore()
         .collection("departments")
@@ -40,6 +41,19 @@ export default {
           name: this.form.name,
         })
         .then(() => {
+          firebase
+            .firestore()
+            .collection("log")
+            .add({
+              user: firebase.auth().currentUser.uid,
+              timestamp: new Date(),
+              action: `Edited Department ${parameter}`,
+              previous: this.form_previous,
+              object: this.form,
+            })
+            .catch((error) => {
+              console.error("Error writing document: ", error);
+            });
           console.log("Document successfully written!");
         })
         .catch((error) => {
@@ -57,6 +71,7 @@ export default {
         if (doc.exists) {
           console.log("Document data:", doc.data());
           this.form.name = doc.data().name;
+          this.form_previous = { ...this.form };
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
@@ -71,6 +86,7 @@ export default {
       form: {
         name: "",
       },
+      form_previous: {},
     };
   },
   computed: {
