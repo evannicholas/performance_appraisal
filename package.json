@@ -2,7 +2,7 @@
   "name": "performance_appraisal",
   "version": "0.0.1",
   "description": "A Quasar Framework app",
-  "productName": "Quasar App",
+  "productName": "Performance Appraisal",
   "author": "evannicholas <evannicholasabednego@gmail.com>",
   "private": true,
   "scripts": {

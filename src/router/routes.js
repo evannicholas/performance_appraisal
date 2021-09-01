@@ -17,7 +17,8 @@ const routes = [
       { path: 'tasks/add', component: () => import('pages/Tasks/Add.vue') },
       { path: 'tasks/edit/:id', component: () => import('pages/Tasks/Edit.vue') },
       { path: 'logs', component: () => import('pages/Logs.vue') },
-      { path: 'tasksassigned', component: () => import('pages/TasksAssigned/AssignTask.vue') },
+      { path: 'assigntask', component: () => import('pages/TasksAssigned/AssignTask.vue') },
+      { path: 'assignedtasks', component: () => import('pages/TasksAssigned/Index.vue') },
     ]
   },
 

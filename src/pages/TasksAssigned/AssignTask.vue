@@ -24,7 +24,8 @@
         color="primary"
         icon="check"
         label="Assign"
-        @click="onClick"
+        @click="assignTask"
+        to="/assignedtasks"
       />
     </div>
   </div>
@@ -68,6 +69,32 @@ export default {
               points: doc.data().points,
             });
           });
+        });
+    },
+    assignTask() {
+      firebase
+        .firestore()
+        .collection("taskAssigned")
+        .add(this.form)
+        .then((docref) => {
+          firebase
+            .firestore()
+            .collection("log")
+            .add({
+              user: firebase.auth().currentUser.uid,
+              timestamp: new Date(),
+              action: `Assigned task to user${docref.id}`,
+              object: this.form,
+            });
+          console.log("Document successfully written!");
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+          console.log("Document successfully written!");
+        })
+        .catch((error) => {
+          
+          console.error("Error writing document: ", error);
         });
     },
   },
